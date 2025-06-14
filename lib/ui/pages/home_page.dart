@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_emoney/shared/methods.dart';
 import 'package:flutter_emoney/shared/theme.dart';
 import 'package:flutter_emoney/ui/widgets/home_latest_transaction_item.dart';
 import 'package:flutter_emoney/ui/widgets/home_service_item.dart';
@@ -11,7 +12,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightBackgroundColor,
       bottomNavigationBar: BottomAppBar(
         color: whiteColor,
         shape: const CircularNotchedRectangle(),
@@ -73,10 +73,10 @@ class HomePage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         children: [
-          buildProfile(),
+          buildProfile(context),
           buildWalletCard(),
           buildLevel(),
-          buildSevices(),
+          buildSevices(context),
           buildLatestTransaction(),
           buildSendAgain(),
           buildFriendlyTips(),
@@ -85,7 +85,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildProfile() {
+  Widget buildProfile(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 40),
       child: Row(
@@ -105,26 +105,35 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            width: 60,
-            height: 60,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage('assets/img_profile.png'),
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: whiteColor,
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('assets/img_profile.png'),
                 ),
-                child: Center(
-                  child: Icon(Icons.check_circle, color: greenColor, size: 14),
+              ),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: whiteColor,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.check_circle,
+                      color: greenColor,
+                      size: 14,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -166,7 +175,7 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 18),
           Text('Balance', style: whiteTextStyle),
           Text(
-            'Rp. 12.500',
+            formatCurrency(522500),
             style: whiteTextStyle.copyWith(fontSize: 24, fontWeight: semiBold),
           ),
         ],
@@ -193,7 +202,7 @@ class HomePage extends StatelessWidget {
               const Spacer(),
               Text('55%', style: greenTextStyle.copyWith(fontWeight: semiBold)),
               Text(
-                'of Rp 20.000',
+                'of ${formatCurrency(20000)}',
                 style: blackTextStyle.copyWith(fontWeight: semiBold),
               ),
             ],
@@ -213,7 +222,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildSevices() {
+  Widget buildSevices(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: Column(
@@ -230,12 +239,16 @@ class HomePage extends StatelessWidget {
               HomeServiceItem(
                 iconUrl: 'assets/ico_download.png',
                 title: 'Top Up',
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, '/topup');
+                },
               ),
               HomeServiceItem(
                 iconUrl: 'assets/ico_send.png',
                 title: 'Send',
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, '/transfer');
+                },
               ),
               HomeServiceItem(
                 iconUrl: 'assets/ico_withdraw.png',
@@ -245,7 +258,12 @@ class HomePage extends StatelessWidget {
               HomeServiceItem(
                 iconUrl: 'assets/ico_more.png',
                 title: 'More',
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const MoreDialog(),
+                  );
+                },
               ),
             ],
           ),
@@ -273,36 +291,36 @@ class HomePage extends StatelessWidget {
               color: whiteColor,
             ),
             child: Column(
-              children: const [
+              children: [
                 HomeLatestTransactionItem(
                   iconUrl: 'assets/ico_circle_topup.png',
                   title: 'Top Up',
                   time: 'Yesterday',
-                  value: '+ 450.000',
+                  value: '+ ${formatCurrency(450000, symbol: '')}',
                 ),
                 HomeLatestTransactionItem(
                   iconUrl: 'assets/ico_circle_gift.png',
                   title: 'Cashback',
                   time: 'Sep 11',
-                  value: '+ 22.000',
+                  value: '+ ${formatCurrency(22000, symbol: '')}',
                 ),
                 HomeLatestTransactionItem(
                   iconUrl: 'assets/ico_circle_withdraw.png',
                   title: 'Withdraw',
                   time: 'Sep 2',
-                  value: '- 5.000',
+                  value: '- ${formatCurrency(5000, symbol: '')}',
                 ),
                 HomeLatestTransactionItem(
                   iconUrl: 'assets/ico_circle_send.png',
                   title: 'Transfer',
                   time: 'Aug 27',
-                  value: '- 124.000',
+                  value: '- ${formatCurrency(124000, symbol: '')}',
                 ),
                 HomeLatestTransactionItem(
                   iconUrl: 'assets/ico_circle_cart.png',
                   title: 'Electric',
                   time: 'Feb 18',
-                  value: '- 12.200.000',
+                  value: '- ${formatCurrency(12200000, symbol: '')}',
                 ),
               ],
             ),
@@ -393,6 +411,81 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MoreDialog extends StatelessWidget {
+  const MoreDialog({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      alignment: Alignment.bottomCenter,
+      content: Container(
+        height: 326,
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          color: lightBackgroundColor,
+        ),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Do More With Us',
+                style: blackTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: semiBold,
+                ),
+              ),
+              const SizedBox(height: 18),
+              Wrap(
+                spacing: 29,
+                runSpacing: 28,
+                children: [
+                  HomeServiceItem(
+                    iconUrl: 'assets/ico_data.png',
+                    title: 'Data',
+                    onTap: () {
+                      Navigator.pushNamed(context, '/data-provider');
+                    },
+                  ),
+                  HomeServiceItem(
+                    iconUrl: 'assets/ico_water.png',
+                    title: 'Water',
+                    onTap: () {},
+                  ),
+                  HomeServiceItem(
+                    iconUrl: 'assets/ico_stream.png',
+                    title: 'Stream',
+                    onTap: () {},
+                  ),
+                  HomeServiceItem(
+                    iconUrl: 'assets/ico_movie.png',
+                    title: 'Movie',
+                    onTap: () {},
+                  ),
+                  HomeServiceItem(
+                    iconUrl: 'assets/ico_food.png',
+                    title: 'Food',
+                    onTap: () {},
+                  ),
+                  HomeServiceItem(
+                    iconUrl: 'assets/ico_travel.png',
+                    title: 'Travel',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_emoney/shared/theme.dart';
 import 'package:flutter_emoney/ui/widgets/buttons.dart';
 
-class SignupSuccess extends StatelessWidget {
-  const SignupSuccess({super.key});
+class DataSuccess extends StatelessWidget {
+  const DataSuccess({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class SignupSuccess extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Akun Berhasil\nTerdaftar',
+              'Paket Data\nBerhasil Terbeli',
               style: blackTextStyle.copyWith(
                 fontSize: 20,
                 fontWeight: semiBold,
@@ -22,14 +22,14 @@ class SignupSuccess extends StatelessWidget {
             ),
             SizedBox(height: 26),
             Text(
-              'Grow your finance start\ntogether with us',
+              'Use the money wisely and\ngrow your finance',
               style: greyTextStyle.copyWith(fontSize: 16),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 50),
             CustomFilledButton(
               width: 183,
-              title: 'Get Started',
+              title: 'Back to Home',
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
