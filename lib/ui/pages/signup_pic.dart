@@ -1,10 +1,34 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_emoney/models/signup_model.dart';
+import 'package:flutter_emoney/shared/methods.dart';
 import 'package:flutter_emoney/shared/theme.dart';
+import 'package:flutter_emoney/ui/pages/signup_ktp.dart';
 import 'package:flutter_emoney/ui/widgets/buttons.dart';
 import 'package:flutter_emoney/ui/widgets/forms.dart';
+import 'package:image_picker/image_picker.dart';
 
-class SignupUploadPic extends StatelessWidget {
-  const SignupUploadPic({super.key});
+class SignupUploadPic extends StatefulWidget {
+  final SignUpModel data;
+
+  const SignupUploadPic({super.key, required this.data});
+
+  @override
+  State<SignupUploadPic> createState() => _SignupUploadPicState();
+}
+
+class _SignupUploadPicState extends State<SignupUploadPic> {
+  final pinController = TextEditingController(text: '');
+  XFile? selectedImage;
+
+  bool validate() {
+    if (pinController.text.length != 6) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,27 +61,34 @@ class SignupUploadPic extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // NOTE : NOT UPLOAD
-                // Container(
-                //   width: 120,
-                //   height: 120,
-                //   decoration: BoxDecoration(
-                //     shape: BoxShape.circle,
-                //     color: lightBackgroundColor,
-                //   ),
-                //   child: Center(
-                //     child: Image.asset('assets/ico_upload.png', width: 32),
-                //   ),
-                // ),
-                // NOTE : UPLOADED
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/img_profile.png'),
+                GestureDetector(
+                  onTap: () async {
+                    final image = await selectImage();
+                    setState(() {
+                      selectedImage = image;
+                    });
+                  },
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: lightBackgroundColor,
+                      image: selectedImage == null
+                          ? null
+                          : DecorationImage(
+                              fit: BoxFit.cover,
+                              image: FileImage(File(selectedImage!.path)),
+                            ),
                     ),
+                    child: selectedImage != null
+                        ? null
+                        : Center(
+                            child: Image.asset(
+                              'assets/ico_upload.png',
+                              width: 32,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -73,12 +104,30 @@ class SignupUploadPic extends StatelessWidget {
                 CustomFormField(
                   title: 'Set PIN (8 digit numbers)',
                   obsecureText: true,
+                  controller: pinController,
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 30),
                 CustomFilledButton(
                   title: 'Continue',
                   onPressed: () {
-                    Navigator.pushNamed(context, '/sign-up-upload-ktp');
+                    if (validate()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupUploadKTP(
+                            data: widget.data.copyWith(
+                              pin: pinController.text,
+                              profilePicture: selectedImage == null
+                                  ? null
+                                  : 'data:image/png;base64,${base64Encode(File(selectedImage!.path).readAsBytesSync())}',
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      showCustomSnackbar(context, 'PIN harus 6 digit');
+                    }
                   },
                 ),
               ],
