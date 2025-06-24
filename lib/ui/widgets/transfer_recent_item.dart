@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_emoney/models/user_model.dart';
 import 'package:flutter_emoney/shared/theme.dart';
 
 class TransferRecentItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String username;
-  final bool isVerified;
+  final UserModel user;
 
-  const TransferRecentItem({
-    super.key,
-    required this.imageUrl,
-    required this.name,
-    required this.username,
-    required this.isVerified,
-  });
+  const TransferRecentItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -31,25 +23,32 @@ class TransferRecentItem extends StatelessWidget {
             height: 45,
             margin: const EdgeInsets.only(right: 14),
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(imageUrl)),
+              image: DecorationImage(
+                image: user.profilePicture == null
+                    ? const AssetImage('assets/img_profile.png')
+                    : NetworkImage(user.profilePicture!) as ImageProvider,
+              ),
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                user.name.toString(),
                 style: blackTextStyle.copyWith(
                   fontSize: 16,
                   fontWeight: medium,
                 ),
               ),
               const SizedBox(height: 2),
-              Text('@$username', style: greyTextStyle.copyWith(fontSize: 12)),
+              Text(
+                '@${user.username}',
+                style: greyTextStyle.copyWith(fontSize: 12),
+              ),
             ],
           ),
           const Spacer(),
-          if (isVerified)
+          if (user.verified == 1)
             Row(
               children: [
                 Icon(Icons.check_circle, size: 14, color: greenColor),

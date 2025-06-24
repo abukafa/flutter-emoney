@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_emoney/blocs/auth/auth_bloc.dart';
+import 'package:flutter_emoney/blocs/user/user_bloc.dart';
 import 'package:flutter_emoney/shared/theme.dart';
 import 'package:flutter_emoney/ui/pages/data_package.dart';
 import 'package:flutter_emoney/ui/pages/data_provider.dart';
@@ -18,7 +19,6 @@ import 'package:flutter_emoney/ui/pages/splash_page.dart';
 import 'package:flutter_emoney/ui/pages/topup_amount_page.dart';
 import 'package:flutter_emoney/ui/pages/topup_page.dart';
 import 'package:flutter_emoney/ui/pages/topup_success.dart';
-import 'package:flutter_emoney/ui/pages/transfer_amount_page.dart';
 import 'package:flutter_emoney/ui/pages/transfer_page.dart';
 import 'package:flutter_emoney/ui/pages/transfer_success.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthBloc()..add(AuthGetCurrentUser()),
         ),
+        BlocProvider(create: (context) => UserBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -67,7 +68,6 @@ class MyApp extends StatelessWidget {
           '/topup-amount': (context) => TopupAmountPage(),
           '/topup-success': (context) => TopupSuccess(),
           '/transfer': (context) => TransferPage(),
-          '/transfer-amount': (context) => TransferAmountPage(),
           '/transfer-success': (context) => TransferSuccess(),
           '/data-provider': (context) => DataProvider(),
           '/data-package': (context) => DataPackage(),

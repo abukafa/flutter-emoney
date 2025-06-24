@@ -194,11 +194,16 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 25),
                 Text(
-                  state.user.cardNumber.toString(),
+                  (state.user.cardNumber ?? '')
+                      .replaceAllMapped(
+                        RegExp(r".{4}"),
+                        (match) => "${match.group(0)} ",
+                      )
+                      .trim(),
                   style: whiteTextStyle.copyWith(
                     fontSize: 18,
                     fontWeight: medium,
-                    letterSpacing: 10,
+                    letterSpacing: 6,
                   ),
                 ),
                 SizedBox(height: 18),
