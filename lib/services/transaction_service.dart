@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_emoney/models/data_plan_form_model.dart';
 import 'package:flutter_emoney/models/topup_model.dart';
+import 'package:flutter_emoney/models/transaction_model.dart';
 import 'package:flutter_emoney/models/transfer_model.dart';
 import 'package:flutter_emoney/services/auth_service.dart';
 import 'package:flutter_emoney/shared/shared_values.dart';
@@ -54,6 +55,34 @@ class TransactionService {
 
       if (res.statusCode != 200) {
         throw jsonDecode(res.body)['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<TransactionModel>> getTransactions() async {
+    try {
+      final token = await AuthService().getToken();
+      final res = await http.get(
+        Uri.parse('$baseUrl/transactions?limit=5'),
+        headers: {'Authorization': token},
+      );
+
+      if (res.statusCode == 200) {
+        return List<TransactionModel>.from(
+          jsonDecode(res.body)['data'].map(
+            (transaction) => TransactionModel.fromJson(transaction),
+          ),
+        ).toList();
+      }
+
+      // Cek jika response body bisa di-decode
+      try {
+        final body = jsonDecode(res.body);
+        throw body['message'] ?? 'Failed to load transactions';
+      } catch (_) {
+        throw 'Failed to load transactions (${res.statusCode})';
       }
     } catch (e) {
       rethrow;
