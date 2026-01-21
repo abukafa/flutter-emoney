@@ -1,6 +1,7 @@
 # Mobile E-Money App (Flutter)
 
-A learning project to build a simple **mobile e-money application** using Flutter. This app demonstrates core digital wallet features including balance management, top-up, transfer, and payment gateway integration (Midtrans).
+A learning project to build a simple **mobile e-money application** using Flutter.  
+This app demonstrates core digital wallet features including balance management, top-up, transfer, and payment gateway integration (Midtrans).
 
 ## ✨ Features
 
