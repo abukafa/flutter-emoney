@@ -1,16 +1,40 @@
-# flutter_emoney
+# Mobile E-Money App (Flutter)
 
-A new Flutter project.
+A learning project to build a simple **mobile e-money application** using Flutter. This app demonstrates core digital wallet features including balance management, top-up, transfer, and payment gateway integration (Midtrans).
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+- User balance (saldo)
+- Top-up balance
+- Balance transfer
+- Midtrans payment gateway integration
+- Clean UI & simple flow
+- Modular Flutter architecture
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠 Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter (Dart)
+- REST API (mock / demo)
+- Midtrans (sandbox)
+- State management (basic)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📱 App Flow
+
+1. User opens wallet
+2. View current balance
+3. Top-up via Midtrans
+4. Transfer balance
+5. Balance updated in real time
+
+## 📸 Screenshots
+
+![Preview](preview.png)
+
+## 🚀 Getting Started
+
+```bash
+git clone https://github.com/username/mobile-e-money.git
+cd mobile-e-money
+flutter pub get
+flutter run
+```
