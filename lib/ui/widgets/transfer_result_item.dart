@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_emoney/models/user_model.dart';
 import 'package:flutter_emoney/shared/theme.dart';
 
 class TransferResultItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String username;
-  final bool isVerified;
+  final UserModel user;
   final bool isSellected;
 
   const TransferResultItem({
     super.key,
-    required this.imageUrl,
-    required this.name,
-    required this.username,
-    this.isVerified = false,
+    required this.user,
     this.isSellected = false,
   });
 
@@ -35,11 +30,15 @@ class TransferResultItem extends StatelessWidget {
             height: 70,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              image: DecorationImage(image: AssetImage(imageUrl)),
+              image: DecorationImage(
+                image: user.profilePicture == null
+                    ? const AssetImage('assets/img_profile.png')
+                    : NetworkImage(user.profilePicture!) as ImageProvider,
+              ),
             ),
-            child: isVerified
+            child: (user.verified == 1)
                 ? Align(
-                    alignment: Alignment.topRight,
+                    alignment: Alignment.bottomRight,
                     child: Container(
                       width: 16,
                       height: 16,
@@ -50,7 +49,7 @@ class TransferResultItem extends StatelessWidget {
                       child: Center(
                         child: Icon(
                           Icons.check_circle,
-                          color: greenColor,
+                          color: blueColor,
                           size: 14,
                         ),
                       ),
@@ -60,11 +59,14 @@ class TransferResultItem extends StatelessWidget {
           ),
           const SizedBox(height: 13),
           Text(
-            name,
+            user.name.toString(),
             style: blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
           ),
           const SizedBox(height: 2),
-          Text('@$username', style: greyTextStyle.copyWith(fontSize: 12)),
+          Text(
+            '@${user.username}',
+            style: greyTextStyle.copyWith(fontSize: 12),
+          ),
         ],
       ),
     );
